@@ -1,15 +1,16 @@
 import binaryninja as bn
-
+from datasketch import MinHash, MinHashLSH
+from . import InstructionScrubbing
 
 class FuncFeatures:
     def __init__(self, func: bn.highlevelil.HighLevelILFunction):
-        self.func = func
+        self.func: bn.highlevelil.HighLevelILFunction = func
         self.base_of_image: int = func.source_function.view.start
         self.func_offset: int = self.func.source_function.start - self.base_of_image
         self.func_name: str = self.GetName()
         self.callers: list = self.GetCallers()
         self.callees: list = self.GetCallees()
-
+        self.similarity_hash: int = self.GetSimilarityHash()
 
     def ToDict(self) -> dict:
         pass
@@ -22,6 +23,24 @@ class FuncFeatures:
 
     def GetName(self) -> str:
         return self.func.source_function.name
+
+
+
+
+    def ScrubSingleInstruction(self, i: bn.HighLevelILInstruction) -> set:
+        return InstructionScrubbing.ScrubHlilInstruction(i)
+
+
+    def GetAllScrubbedInstructions(self) -> list[set]:
+        scrubbed_instructions: list[set] = []
+        for i in self.func.instructions:
+
+
+
+    def GetSimilarityHash(self) -> int:
+
+
+
 
 
 class BBlockFeatures:

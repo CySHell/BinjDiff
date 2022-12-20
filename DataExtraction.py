@@ -1,9 +1,8 @@
 from DataModel import *
 from FeatureExtraction.Local import Feature
 from typing import *
-import networkx as nx
+import binaryninja as bn
 
-g_all_local_func_features: nx.DiGraph = nx.DiGraph()
 
 def InitBv(bv: bn.binaryview) -> bool:
     # Any init procedures needed on the bv, such as re-basing etc.
@@ -29,20 +28,13 @@ def IsFuncEligibleForExtraction(func: bn.function.Function) -> bool:
         return False
     return True
 
-def InsertFuncFeatures(func: bn.Function, func_features: Feature.FuncFeatures) -> bool:
-    # The graph recognizes a function as its offset from the base of the image because there might
-    # be duplicate function names within an image (such as in constructors with different prototypes).
-    g_all_local_func_features.add_node(func_features.func_offset, func_features.ToDict())
-
-
 def ExtractDataAllFuncs(bv: bn.binaryview) -> Optional[dict]:
     all_func_features = None
     if InitBv(bv):
         for func in bv.functions:
             if IsFuncEligibleForExtraction(func):
                 if func_features := ExtractFuncData(func):
-
-                    if InsertFuncFeatures(func, func_features)
+                    pass
         if all_func_features := ExtractFuncGlobalData():
             return all_func_features
     return None
